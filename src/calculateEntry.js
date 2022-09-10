@@ -15,7 +15,7 @@ function countEntrants(entrants) {
 }
 
 function calculateEntry(entrants) {
-  if (entrants === undefined || Object.keys(entrants).length === 0) {
+  if (Array.isArray(entrants) === false) {
     return 0;
   }
   const child = countEntrants(entrants).child * 20.99;

@@ -1,6 +1,6 @@
 const data = require('../data/zoo_data');
 
-function achaAnimaisPorSexo(animais, sorted, sex) {
+function findAnimalsBySex(animais, sorted, sex) {
   return animais.reduce((acc, cur) => {
     const todosOsNomes = cur.residents.filter((element) => element.sex === sex)
       .map((element) => element.name);
@@ -13,56 +13,56 @@ function achaAnimaisPorSexo(animais, sorted, sex) {
   }, []);
 }
 
-function achaAnimais(animais, sorted, sex) {
+function findAnimais(animais, sorted, sex) {
   if (sex === 'male' || sex === 'female') {
-    return achaAnimaisPorSexo(animais, sorted, sex);
+    return findAnimalsBySex(animais, sorted, sex);
   }
   return animais.reduce((acc, cur) => {
-    const todosOsNomes = cur.residents.map((element) => element.name);
+    const allNames = cur.residents.map((element) => element.name);
     if (sorted) {
-      acc.push({ [cur.name]: todosOsNomes.sort() });
+      acc.push({ [cur.name]: allNames.sort() });
     } else {
-      acc.push({ [cur.name]: todosOsNomes });
+      acc.push({ [cur.name]: allNames });
     }
     return acc;
   }, []);
 }
 
-function animaisNE(obj, booNames, booSorted, animalSex) {
+function animalsNE(obj, booNames, booSorted, animalSex) {
   const param = obj;
   const normal = data.species.filter((animal) => animal.location === 'NE');
   if (booNames) {
-    param.NE = achaAnimais(normal, booSorted, animalSex);
+    param.NE = findAnimais(normal, booSorted, animalSex);
   } else {
     param.NE = normal.map((animal) => animal.name);
   }
 }
 
-function animaisNW(obj, booNames, booSorted, animalSex) {
+function animalsNW(obj, booNames, booSorted, animalSex) {
   const param = obj;
   const normal = data.species.filter((animal) => animal.location === 'NW');
   if (booNames) {
-    param.NW = achaAnimais(normal, booSorted, animalSex);
+    param.NW = findAnimais(normal, booSorted, animalSex);
   } else {
     param.NW = normal.map((animal) => animal.name);
   }
 }
 
-function animaisSE(obj, booNames, booSorted, animalSex) {
+function animalsSE(obj, booNames, booSorted, animalSex) {
   const param = obj;
   const normal = data.species.filter((animal) => animal.location === 'SE');
   if (booNames) {
-    param.SE = achaAnimais(normal, booSorted, animalSex);
+    param.SE = findAnimais(normal, booSorted, animalSex);
   } else {
     param.SE = normal.map((animal) => animal.name);
   }
 }
 
-function animaisSW(obj, booNames, booSorted, animalSex) {
+function animalsSW(obj, booNames, booSorted, animalSex) {
   const param = obj;
   const normal = data.species.filter((animal) => animal.location === 'SW');
   if (booNames) {
-    param.SW = achaAnimais(normal, booSorted, animalSex);
+    param.SW = findAnimais(normal, booSorted, animalSex);
   } else {
     param.SW = normal.map((animal) => animal.name);
   }
@@ -70,12 +70,12 @@ function animaisSW(obj, booNames, booSorted, animalSex) {
 function getAnimalMap(options = undefined) {
   const obj = {};
   if (options === undefined) {
-    animaisNE(obj); animaisNW(obj); animaisSE(obj); animaisSW(obj);
+    animalsNE(obj); animalsNW(obj); animalsSE(obj); animalsSW(obj);
   } else if (options) {
-    animaisNE(obj, options.includeNames, options.sorted, options.sex);
-    animaisNW(obj, options.includeNames, options.sorted, options.sex);
-    animaisSE(obj, options.includeNames, options.sorted, options.sex);
-    animaisSW(obj, options.includeNames, options.sorted, options.sex);
+    animalsNE(obj, options.includeNames, options.sorted, options.sex);
+    animalsNW(obj, options.includeNames, options.sorted, options.sex);
+    animalsSE(obj, options.includeNames, options.sorted, options.sex);
+    animalsSW(obj, options.includeNames, options.sorted, options.sex);
   }
   return obj;
 }

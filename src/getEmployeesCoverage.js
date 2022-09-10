@@ -1,49 +1,52 @@
 const data = require('../data/zoo_data');
 
-function getSpecies(objeto) {
-  const animaisResponsaveis = [];
-  objeto.responsibleFor.forEach((element) => {
-    const atual = data.species.find((animal) => animal.id === element).name;
-    animaisResponsaveis.push(atual);
-  });
-  return animaisResponsaveis;
+function getSpecies(employeeObj) {
+  const animals = [];
+  for (let index = 0; index < employeeObj.responsibleFor.length; index += 1) {
+    const actualAnimal = employeeObj.responsibleFor[index];
+    const animalName = data.species.find((animal) => animal.id === actualAnimal).name;
+    animals.push(animalName);
+  }
+  return animals;
 }
 
-function getLocation(objeto) {
+function getLocations(employeeObj) {
   const localizacoes = [];
-  objeto.responsibleFor.forEach((element) => {
-    const atual = data.species.find((animal) => animal.id === element).location;
-    localizacoes.push(atual);
-  });
+  for (let index = 0; index < employeeObj.responsibleFor.length; index += 1) {
+    const actualAnimal = employeeObj.responsibleFor[index];
+    const animalLocation = data.species.find((animal) => animal.id === actualAnimal).location;
+    localizacoes.push(animalLocation);
+  }
   return localizacoes;
 }
 
-function result(empre) {
-  if (empre === undefined) {
+function searchResult(employee) {
+  if (employee === undefined) {
     throw new Error('Informações inválidas');
   }
-  return { id: empre.id,
-    fullName: `${empre.firstName} ${empre.lastName}`,
-    species: getSpecies(empre),
-    locations: getLocation(empre) };
+  return {
+    id: employee.id,
+    fullName: `${employee.firstName} ${employee.lastName}`,
+    species: getSpecies(employee),
+    locations: getLocations(employee),
+  };
 }
 
 function getEmployeesCoverage(obj) {
   if (obj === undefined) {
-    const arr = [];
-    data.employees.forEach((element) => {
-      arr.push(result(element));
-    });
-    return arr;
-  }
-  const empregado = data.employees.find((element) => {
-    if (element.firstName === obj.name || element.lastName === obj.name || element.id === obj.id) {
-      return element;
+    const allEmployees = [];
+    for (let index = 0; index < data.employees.length; index += 1) {
+      allEmployees.push(searchResult(data.employees[index]));
     }
-    return undefined;
-  });
+    return allEmployees;
+  }
+
+  const employee = data.employees
+    .find((element) => Object.values(element).includes(obj.name)
+    || Object.values(element).includes(obj.id));
+
   try {
-    return result(empregado);
+    return searchResult(employee);
   } catch (error) {
     throw error.message;
   }

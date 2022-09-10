@@ -5,11 +5,14 @@ function getSpeciesByIds(...ids) {
     return [];
   }
   if (ids.length === 1) {
-    return [data.species.find((element) => element.id === ids[0])];
+    return data.species.filter((element) => element.id === ids[0]);
   }
-  const especies = [];
-  ids.forEach((idAtual) => especies.push(data.species.find((element) => element.id === idAtual)));
-  return especies;
+  const species = [];
+  for (let index = 0; index < ids.length; index += 1) {
+    const findSpecieById = data.species.find((element) => element.id === ids[index]);
+    species.push(findSpecieById);
+  }
+  return species;
 }
 
 module.exports = getSpeciesByIds;
